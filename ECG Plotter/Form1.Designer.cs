@@ -39,11 +39,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.textBox_filteredData = new System.Windows.Forms.TextBox();
+            this.textBox_FilteredData = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_time = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox_rawData = new System.Windows.Forms.TextBox();
+            this.textBox_RawData = new System.Windows.Forms.TextBox();
             this.display = new GraphLib.PlotterDisplayEx();
             this.openFileDialogIn = new System.Windows.Forms.OpenFileDialog();
             this.toolStrip1.SuspendLayout();
@@ -82,26 +82,26 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -130,11 +130,11 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.textBox_filteredData);
+            this.splitContainer1.Panel1.Controls.Add(this.textBox_FilteredData);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.textBox_time);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Panel1.Controls.Add(this.textBox_rawData);
+            this.splitContainer1.Panel1.Controls.Add(this.textBox_RawData);
             this.splitContainer1.Panel1.Enabled = false;
             // 
             // splitContainer1.Panel2
@@ -144,16 +144,16 @@
             this.splitContainer1.SplitterDistance = 279;
             this.splitContainer1.TabIndex = 0;
             // 
-            // textBox_filteredData
+            // textBox_FilteredData
             // 
-            this.textBox_filteredData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBox_FilteredData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_filteredData.Location = new System.Drawing.Point(103, 20);
-            this.textBox_filteredData.Multiline = true;
-            this.textBox_filteredData.Name = "textBox_filteredData";
-            this.textBox_filteredData.Size = new System.Drawing.Size(104, 418);
-            this.textBox_filteredData.TabIndex = 4;
+            this.textBox_FilteredData.Location = new System.Drawing.Point(103, 20);
+            this.textBox_FilteredData.Multiline = true;
+            this.textBox_FilteredData.Name = "textBox_FilteredData";
+            this.textBox_FilteredData.Size = new System.Drawing.Size(104, 418);
+            this.textBox_FilteredData.TabIndex = 4;
             // 
             // label2
             // 
@@ -184,17 +184,17 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "RawData";
             // 
-            // textBox_rawData
+            // textBox_RawData
             // 
-            this.textBox_rawData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBox_RawData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_rawData.Location = new System.Drawing.Point(0, 20);
-            this.textBox_rawData.Multiline = true;
-            this.textBox_rawData.Name = "textBox_rawData";
-            this.textBox_rawData.ReadOnly = true;
-            this.textBox_rawData.Size = new System.Drawing.Size(104, 418);
-            this.textBox_rawData.TabIndex = 0;
+            this.textBox_RawData.Location = new System.Drawing.Point(0, 20);
+            this.textBox_RawData.Multiline = true;
+            this.textBox_RawData.Name = "textBox_RawData";
+            this.textBox_RawData.ReadOnly = true;
+            this.textBox_RawData.Size = new System.Drawing.Size(104, 418);
+            this.textBox_RawData.TabIndex = 0;
             // 
             // display
             // 
@@ -206,12 +206,13 @@
             this.display.BackgroundColorTop = System.Drawing.Color.White;
             this.display.DashedGridColor = System.Drawing.Color.DarkGray;
             this.display.DoubleBuffering = false;
-            this.display.Location = new System.Drawing.Point(-1, 0);
+            this.display.Location = new System.Drawing.Point(0, 0);
             this.display.Name = "display";
             this.display.PlaySpeed = 0.5F;
-            this.display.Size = new System.Drawing.Size(555, 438);
+            this.display.Size = new System.Drawing.Size(552, 440);
             this.display.SolidGridColor = System.Drawing.Color.DarkGray;
             this.display.TabIndex = 0;
+            this.display.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.display_MouseWheel);
             // 
             // openFileDialogIn
             // 
@@ -251,11 +252,11 @@
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.OpenFileDialog openFileDialogIn;
-        private System.Windows.Forms.TextBox textBox_rawData;
+        private System.Windows.Forms.TextBox textBox_RawData;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_time;
-        private System.Windows.Forms.TextBox textBox_filteredData;
+        private System.Windows.Forms.TextBox textBox_FilteredData;
         private GraphLib.PlotterDisplayEx display;
     }
 }

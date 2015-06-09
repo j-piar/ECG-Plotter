@@ -74,20 +74,10 @@ namespace ECG_Plotter
         {
             this.SuspendLayout();
             display.DataSources.Clear();
-            display.SetDisplayRangeX(0, 400);
-            display.SetGridDistanceX(50);
-            display.SetGridOriginX(500);
-            display.Smoothing = System.Drawing.Drawing2D.SmoothingMode.None;
-            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
-            
-            display.BackgroundColorBot = Color.White;
-            display.BackgroundColorTop = Color.FromArgb(183, 183, 255);
-            display.SolidGridColor = Color.Blue;
-            display.DashedGridColor = Color.Blue;
-            display.ShowMovingGrid = false;
+            setDisplayToDefault();
 
             new Thread(() => calcData(PointDataType.RawData)).Start();
-            //Thread.Sleep(100);
+            Thread.Sleep(100);
             new Thread(() => calcData(PointDataType.FilteredData)).Start();
 
             this.ResumeLayout();
@@ -110,16 +100,8 @@ namespace ECG_Plotter
             lock (pad_lock)
             {
                 display.DataSources.Add(new DataSource());
-            
-                 ds = display.DataSources[(int)type];
-                ds.Name = type.ToString();
-                ds.GraphColor = colourChooser((int)type);
-                ds.OnRenderXAxisLabel += RenderXLabel;
-                ds.AutoScaleY = false;
-                ds.SetDisplayRangeY(-2, 2);
-                ds.SetGridOriginY(0);
-                ds.SetGridDistanceY(1);
-                ds.OnRenderYAxisLabel += RenderYLabel;
+
+                ds = setAllGraphsToDeafault(type);
                 ds.Length = 500000;
             }
             XmlNodeList fData = doc.GetElementsByTagName(type.ToString());
@@ -136,6 +118,35 @@ namespace ECG_Plotter
                     }
                 }
             }
+        }
+        delegate void SetTextCallback(string text);
+        private DataSource setAllGraphsToDeafault(PointDataType type)
+        {
+            DataSource ds;
+            ds = display.DataSources[(int)type];
+            ds.Name = type.ToString();
+            ds.GraphColor = colourChooser((int)type);
+            ds.OnRenderXAxisLabel += RenderXLabel;
+            ds.AutoScaleY = false;
+            ds.SetDisplayRangeY(-2, 2);
+            ds.SetGridOriginY(0);
+            ds.SetGridDistanceY(1);
+            ds.OnRenderYAxisLabel += RenderYLabel;
+            return ds;
+        }
+        private void setDisplayToDefault()
+        {
+            display.SetDisplayRangeX(0, 400);
+            display.SetGridDistanceX(50);
+            display.SetGridOriginX(500);
+            display.Smoothing = System.Drawing.Drawing2D.SmoothingMode.None;
+            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
+
+            display.BackgroundColorBot = Color.White;
+            display.BackgroundColorTop = Color.FromArgb(183, 183, 255);
+            display.SolidGridColor = Color.Blue;
+            display.DashedGridColor = Color.Blue;
+            display.ShowMovingGrid = false;
         }
         private enum PointDataType
         {
@@ -160,6 +171,25 @@ namespace ECG_Plotter
         private String RenderYLabel(DataSource s, float value)
         {
             return String.Format("{0:0.0}", value);
+        }
+
+        private void display_MouseWheel(object sender, MouseEventArgs e)
+        {
+            bool threshold = false; 
+            for (int i = 0; i < display.DataSources.Count; i++)
+            {
+                PointF CurRangeY = display.DataSources[i].GetDisplayRangeY();
+                float pluginNumber = e.Delta < 0 ? (float)-0.5 : (float)0.5;
+                if (CurRangeY.Y + pluginNumber <= 7 && CurRangeY.Y + pluginNumber > 0)
+                    display.DataSources[i].SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
+                else
+                    threshold = true;
+            }
+            if (!threshold)
+            {
+                PointF CurRangeX = display.GetDisplayRangeX();
+                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + e.Delta);
+            }
         }
     }
 }
