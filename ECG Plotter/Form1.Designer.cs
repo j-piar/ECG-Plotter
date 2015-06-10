@@ -44,8 +44,8 @@
             this.textBox_time = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_rawData = new System.Windows.Forms.TextBox();
+            this.display = new GraphLib.PlotterDisplayEx();
             this.openFileDialogIn = new System.Windows.Forms.OpenFileDialog();
-            this.display = new ECG_Plotter.PlotterGraphEx_custom();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -82,26 +82,26 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -196,10 +196,6 @@
             this.textBox_rawData.Size = new System.Drawing.Size(104, 418);
             this.textBox_rawData.TabIndex = 0;
             // 
-            // openFileDialogIn
-            // 
-            this.openFileDialogIn.FileName = "openFileDialogIn";
-            // 
             // display
             // 
             this.display.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -210,12 +206,16 @@
             this.display.BackgroundColorTop = System.Drawing.Color.White;
             this.display.DashedGridColor = System.Drawing.Color.DarkGray;
             this.display.DoubleBuffering = false;
-            this.display.Location = new System.Drawing.Point(0, 0);
+            this.display.Location = new System.Drawing.Point(-1, 0);
             this.display.Name = "display";
             this.display.PlaySpeed = 0.5F;
-            this.display.Size = new System.Drawing.Size(552, 440);
+            this.display.Size = new System.Drawing.Size(555, 438);
             this.display.SolidGridColor = System.Drawing.Color.DarkGray;
             this.display.TabIndex = 0;
+            // 
+            // openFileDialogIn
+            // 
+            this.openFileDialogIn.FileName = "openFileDialogIn";
             // 
             // MainForm
             // 
@@ -256,7 +256,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_time;
         private System.Windows.Forms.TextBox textBox_filteredData;
-        private PlotterGraphEx_custom display;
+        private GraphLib.PlotterDisplayEx display;
     }
 }
 
