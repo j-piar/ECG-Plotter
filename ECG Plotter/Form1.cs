@@ -179,7 +179,7 @@ namespace ECG_Plotter
             for (int i = 0; i < display.DataSources.Count; i++)
             {
                 PointF CurRangeY = display.DataSources[i].GetDisplayRangeY();
-                float pluginNumber = e.Delta < 0 ? (float)-0.5 : (float)0.5;
+                float pluginNumber = e.Delta < 0 ? (float)-0.2 : (float)0.2;
                 if (CurRangeY.Y + pluginNumber <= 7 && CurRangeY.Y + pluginNumber > 0)
                     display.DataSources[i].SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
                 else
