@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AxisDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapEx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartPage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCapture.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CurveDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gfxutils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingAvgDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TrendDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2d.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGRAPH.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphAxis.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphBitmap.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphDataNotation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphDataSerie.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphLabel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphLogAxis.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphObjectBase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ColourPicker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TrueColorToolBar.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorButton.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ColourPopup.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphLine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphAxisMaker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="XGraphShowOptionDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphTrendLineToolDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AxisDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapEx.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ChartDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ChartPage.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCapture.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CurveDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxUtils.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingAvgDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TrendDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2d.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGRAPH.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphAxis.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphBitmap.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphDataNotation.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphDataSerie.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphLabel.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphLogAxis.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphObjectBase.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphData.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="memdc.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TrueColorToolBar.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorButton.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ColourPopup.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ColourPicker.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphLine.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphAxisMaker.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="XGraphShowOptionDlg.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphTrendLineToolDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GraphLib.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="res\bs5.bmp">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\bs4.bmp">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\bs3.bmp">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\bs2.bmp">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\bs1.bmp">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\bitmap1.bmp">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="ReadMe.txt">
+      <Filter>헤더 파일</Filter>
+    </None>
+  </ItemGroup>
+</Project>
