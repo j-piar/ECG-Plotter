@@ -20,7 +20,6 @@ namespace ECG_Plotter
             InitializeComponent();
 
         }
-
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loadXML();
@@ -28,6 +27,7 @@ namespace ECG_Plotter
             {
                 if (!doc.Equals(null))
                 {
+                    this.toolStripDropDownButton_dMode.Enabled = true;
                     processData();
                 }
             }
@@ -113,7 +113,7 @@ namespace ECG_Plotter
                     if (node_dataPoint.Name == "DataPoint")
                     {
                         ds.Samples[i].x = float.Parse(node_dataPoint.Attributes[0].Value) * 100;
-                        ds.Samples[i].y = float.Parse(node_dataPoint.Attributes[1].Value) * 100;
+                        ds.Samples[i].y = float.Parse(node_dataPoint.Attributes[1].Value, System.Globalization.NumberStyles.Float) * 100;
                         i++;
                     }
                 }
@@ -170,26 +170,94 @@ namespace ECG_Plotter
 
         private String RenderYLabel(DataSource s, float value)
         {
-            return String.Format("{0:0.0}", value);
+            foreach (DataSource source in display.DataSources)
+            {
+                Console.Out.WriteLine("Y value: {0},  dY: {1} and Cur_YD1 is {2}", value, source.DY, source.Cur_YD1 );
+            }
+            return String.Format("{0:0.000}", value);
         }
-
+        int tInc;
         private void display_MouseWheel(object sender, MouseEventArgs e)
         {
-            bool threshold = false; 
-            for (int i = 0; i < display.DataSources.Count; i++)
+            // fix mouse scroll to 1 notch
+            int deltaFix, deltaCount;
+            float pluginNumber;
+            float zDetail;
+            PointF CurRangeY, CurRangeX;
+
+            switch (display.PanelLayout)
             {
-                PointF CurRangeY = display.DataSources[i].GetDisplayRangeY();
-                float pluginNumber = e.Delta < 0 ? (float)-0.2 : (float)0.2;
-                if (CurRangeY.Y + pluginNumber <= 7 && CurRangeY.Y + pluginNumber > 0)
-                    display.DataSources[i].SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
+                case PlotterGraphPaneEx.LayoutMode.NORMAL:
+                    deltaCount = 3;
+                    zDetail = (float)0.5;
+                    break;
+                case PlotterGraphPaneEx.LayoutMode.STACKED:
+                    deltaCount = 3;
+                    zDetail = (float)0.5;
+                    break;
+                default:
+                    deltaCount = 3;
+                    zDetail = (float)0.5;
+                    break;
+            }
+
+            if (e.Delta < -120)
+                deltaFix = -120;
+            else if (e.Delta > 120)
+                deltaFix = 120;
+            else
+                deltaFix = e.Delta;
+            pluginNumber = deltaFix < 0 ? (float)-zDetail : (float)zDetail;
+            tInc += deltaFix;
+
+            if ((tInc < 0 ? -tInc : tInc) <= deltaCount * 120)
+            {
+                foreach (DataSource source in display.DataSources)
+                {
+                    CurRangeY = source.GetDisplayRangeY();
+                    source.SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
+                }
+                CurRangeX = display.GetDisplayRangeX();
+                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
+            }
+            else
+                tInc -= deltaFix;
+        }
+
+        private void toolStripMenuItem_single_Click(object sender, EventArgs e)
+        {
+            this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.NORMAL;
+            foreach (DataSource s in display.DataSources)
+            {
+                s.AutoScaleY = true;
+            }
+            this.button_autoScaleY.Enabled = true;
+        }
+
+        private void toolStripMenuItem_dual_Click(object sender, EventArgs e)
+        {
+            this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
+        }
+
+        private void button_autoScaleY_Click(object sender, EventArgs e)
+        {
+            foreach (DataSource s in display.DataSources)
+            {
+                if (s.AutoScaleY)
+                    s.AutoScaleY = false;
                 else
-                    threshold = true;
+                    s.AutoScaleY = true;
             }
-            if (!threshold)
-            {
-                PointF CurRangeX = display.GetDisplayRangeX();
-                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + e.Delta);
-            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel_info_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

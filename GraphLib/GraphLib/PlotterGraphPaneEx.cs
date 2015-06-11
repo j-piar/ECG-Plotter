@@ -999,10 +999,10 @@ namespace GraphLib
 
                         float GridDistY = source.grid_distance_y;
 
-                        if (source.AutoScaleY)
+                        if (true)//source.AutoScaleY)
                         {
                             // calculate a matching grid distance                            
-                            GridDistY = - Utilities.MostSignificantDigit(source.DY );
+                            GridDistY = - Utilities.ThirdDecimalDigit(source.DY );
 
                             if (GridDistY == 0)
                             {
