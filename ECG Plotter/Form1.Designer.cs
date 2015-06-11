@@ -169,16 +169,16 @@
             this.panel_info.Controls.Add(this.textBox2);
             this.panel_info.Controls.Add(this.label1);
             this.panel_info.Controls.Add(this.textBox1);
-            this.panel_info.Location = new System.Drawing.Point(754, -4);
+            this.panel_info.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel_info.Location = new System.Drawing.Point(753, 0);
             this.panel_info.Name = "panel_info";
-            this.panel_info.Size = new System.Drawing.Size(84, 442);
+            this.panel_info.Size = new System.Drawing.Size(84, 438);
             this.panel_info.TabIndex = 1;
-            this.panel_info.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_info_Paint);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(28, 52);
+            this.label6.Location = new System.Drawing.Point(16, 53);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 13;
@@ -256,7 +256,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(82, 20);
             this.textBox1.TabIndex = 3;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // display
             // 

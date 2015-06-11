@@ -249,15 +249,5 @@ namespace ECG_Plotter
                     s.AutoScaleY = true;
             }
         }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel_info_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }
