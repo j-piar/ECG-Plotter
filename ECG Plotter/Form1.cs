@@ -20,12 +20,32 @@ namespace ECG_Plotter
             InitializeComponent();
 
         }
+
+        /// <summary>
+        /// Event function loading the file
+        /// </summary>
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            loadXML();
             try
             {
-                if (!doc.Equals(null))
+                openFileDialogIn.CheckFileExists = true;
+                DialogResult openDialog = openFileDialogIn.ShowDialog();
+
+                if (openDialog == DialogResult.OK)
+                {
+                    string path = openFileDialogIn.FileName; // The Path to the .Xml file
+                    FileStream fileReader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); //Set up the filestream (fileReader)
+                    doc = new XmlDocument();
+                    doc.Load(fileReader); //Load the data from the file into the XmlDocument
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(String.Format("An error occured. Original message: {0}", exc.Message));
+            }
+            try
+            {
+                if (!doc.Equals(null)) // if file loaded to XMLDocument doc
                 {
                     this.toolStripDropDownButton_dMode.Enabled = true;
                     processData();
@@ -43,32 +63,7 @@ namespace ECG_Plotter
         }
 
         /// <summary>
-        /// Loading XML file using openFileDialog
-        /// </summary>
-        private void loadXML()
-        {
-            try
-            {
-                openFileDialogIn.CheckFileExists = true;
-                DialogResult openDialog = openFileDialogIn.ShowDialog();
-
-                if (openDialog == DialogResult.OK)
-                {
-
-                    string path = openFileDialogIn.FileName; // The Path to the .Xml file
-                    FileStream fileReader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); //Set up the filestream (fileReader)
-                    doc = new XmlDocument();
-                    doc.Load(fileReader); //Load the data from the file into the XmlDocument
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(String.Format("An error occured. Original message: {0}", e.Message));
-            }
-        }
-
-        /// <summary>
-        /// Setup PlotterGraph and extract data from the XML file using separate threads for performance [O(n/2)]
+        /// Setup PlotterGraph and extract data from the XML file
         /// </summary>
         private void processData()
         {
@@ -76,11 +71,17 @@ namespace ECG_Plotter
             display.DataSources.Clear();
             setDisplayToDefault();
 
-            new Thread(() => calcData(PointDataType.RawData)).Start();
-            Thread.Sleep(100);
-            new Thread(() => calcData(PointDataType.FilteredData)).Start();
-
+            calcData(PointDataType.RawData);
+            calcData(PointDataType.FilteredData);
+            //new Thread(() => calcData(PointDataType.RawData)).Start();
+            //Thread.Sleep(100);
+            //new Thread(() => calcData(PointDataType.FilteredData)).Start();
             this.ResumeLayout();
+
+            this.textBox_highestRawData.Text = display.DataSources[0].HighestValue.ToString();
+            this.textBox_lowestRawData.Text = display.DataSources[0].LowestValue.ToString();
+            this.textBox_highestFilteredData.Text = display.DataSources[1].HighestValue.ToString();
+            this.textBox_lowestFilteredData.Text = display.DataSources[1].LowestValue.ToString();
             display.Refresh();
         }
 
@@ -97,33 +98,31 @@ namespace ECG_Plotter
         private void calcData(PointDataType type)
         {
             DataSource ds;
+            float x, y;
             lock (pad_lock)
             {
                 display.DataSources.Add(new DataSource());
-
-                ds = setAllGraphsToDeafault(type);
-                ds.Length = 500000;
+                ds = display.DataSources[(int)type]; // set the default settings for the new graph
+                setAllGraphsToDeafault(ds, type);
             }
             XmlNodeList fData = doc.GetElementsByTagName(type.ToString());
             int i = 0;
             foreach (XmlNode node_dataType in fData)
             {
+                ds.Samples = new List<cPoint>();
                 foreach (XmlNode node_dataPoint in node_dataType.ChildNodes)
                 {
-                    if (node_dataPoint.Name == "DataPoint")
-                    {
-                        ds.Samples[i].x = float.Parse(node_dataPoint.Attributes[0].Value) * 100;
-                        ds.Samples[i].y = float.Parse(node_dataPoint.Attributes[1].Value, System.Globalization.NumberStyles.Float) * 100;
-                        i++;
-                    }
+                    x = float.Parse(node_dataPoint.Attributes[0].Value);
+                    y = (float)decimal.Parse(node_dataPoint.Attributes[1].Value, System.Globalization.NumberStyles.Float);
+                    ds.Samples.Add(new cPoint(x * 100, y * 100));
+                    ds.findExtremes(y);
+                    i++;
                 }
             }
         }
         delegate void SetTextCallback(string text);
-        private DataSource setAllGraphsToDeafault(PointDataType type)
+        private void setAllGraphsToDeafault(DataSource ds, PointDataType type)
         {
-            DataSource ds;
-            ds = display.DataSources[(int)type];
             ds.Name = type.ToString();
             ds.GraphColor = colourChooser((int)type);
             ds.OnRenderXAxisLabel += RenderXLabel;
@@ -132,7 +131,6 @@ namespace ECG_Plotter
             ds.SetGridOriginY(0);
             ds.SetGridDistanceY(1);
             ds.OnRenderYAxisLabel += RenderYLabel;
-            return ds;
         }
         private void setDisplayToDefault()
         {
@@ -163,27 +161,25 @@ namespace ECG_Plotter
             else
             {
                 int Value = (int)(s.Samples[idx].x);
-                String Label = "" + Value/100 + "\"";
+                String Label = "" + Value + "\"";
                 return Label;
             }
         }
 
         private String RenderYLabel(DataSource s, float value)
         {
-            foreach (DataSource source in display.DataSources)
-            {
-                Console.Out.WriteLine("Y value: {0},  dY: {1} and Cur_YD1 is {2}", value, source.DY, source.Cur_YD1 );
-            }
-            return String.Format("{0:0.000}", value);
+            return String.Format("{0:0.000}", value/100);
         }
         int tInc;
         private void display_MouseWheel(object sender, MouseEventArgs e)
         {
+
             // fix mouse scroll to 1 notch
             int deltaFix, deltaCount;
             float pluginNumber;
             float zDetail;
             PointF CurRangeY, CurRangeX;
+            bool autoScaleOn = false;
 
             switch (display.PanelLayout)
             {
@@ -214,11 +210,17 @@ namespace ECG_Plotter
             {
                 foreach (DataSource source in display.DataSources)
                 {
-                    CurRangeY = source.GetDisplayRangeY();
-                    source.SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
+                    if (!source.AutoScaleY)
+                    {
+                        CurRangeY = source.GetDisplayRangeY();
+                        source.SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
+                    }
                 }
-                CurRangeX = display.GetDisplayRangeX();
-                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
+                if (!autoScaleOn)
+                {
+                    CurRangeX = display.GetDisplayRangeX();
+                    display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
+                }
             }
             else
                 tInc -= deltaFix;

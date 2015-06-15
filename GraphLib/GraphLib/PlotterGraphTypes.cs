@@ -33,6 +33,12 @@ namespace GraphLib
     {
         public float x;
         public float y;
+
+        public cPoint(float x, float y)
+        {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     public class DataSource  
@@ -43,12 +49,12 @@ namespace GraphLib
         public OnDrawXAxisLabelEvent OnRenderXAxisLabel = null;
         public OnDrawYAxisLabelEvent OnRenderYAxisLabel = null;
 
-        private cPoint[] samples = null;
+        private List<cPoint> samples = null;
       
-        private int length = 0;
         private String name = String.Empty;
         private int downSample = 1;
         private Color color = Color.Black;
+        private float highestValue = 0, lowestValue = 999;
 
         public float VisibleDataRange_X = 0;
         public float DY = 0;      
@@ -76,6 +82,28 @@ namespace GraphLib
         
         public float CurGraphWidth = 1.0f;
 
+        public float HighestValue
+        {
+            get
+            {
+                return highestValue;
+            }
+            set
+            {
+                highestValue = value;
+            }
+        }
+        public float LowestValue
+        {
+            get
+            {
+                return lowestValue;
+            }
+            set
+            {
+                lowestValue = value;
+            }
+        }
         public bool AutoScaleY
         {
             get
@@ -100,7 +128,7 @@ namespace GraphLib
             }
         }
 
-        public cPoint[] Samples
+        public List<cPoint> Samples
         {
             get 
             {
@@ -108,8 +136,7 @@ namespace GraphLib
             }
             set 
             {
-                samples = value;
-                length = samples.Length;
+                samples = new List<cPoint>();
             }
         }
 
@@ -118,7 +145,7 @@ namespace GraphLib
             get
             {
                 float x_min = float.MaxValue;
-                if (samples.Length > 0)
+                if (samples.Count > 0)
                 {
                     foreach (cPoint p in samples)
                     {
@@ -134,7 +161,7 @@ namespace GraphLib
             get
             {
                 float x_max = float.MinValue;
-                if (samples.Length > 0)
+                if (samples.Count > 0)
                 {
                     foreach (cPoint p in samples)
                     {
@@ -150,7 +177,7 @@ namespace GraphLib
             get
             {
                 float y_min = float.MaxValue;
-                if (samples.Length > 0)
+                if (samples.Count > 0)
                 {
                     foreach (cPoint p in samples)
                     {
@@ -166,7 +193,7 @@ namespace GraphLib
             get
             {
                 float y_max = float.MinValue;
-                if (samples.Length > 0)
+                if (samples.Count > 0)
                 {
                     foreach (cPoint p in samples)
                     {
@@ -175,6 +202,14 @@ namespace GraphLib
                 }
                 return y_max;
             }
+        }
+
+        public void findExtremes(float value)
+        {
+            if (value >= highestValue)
+                highestValue = value;
+            else
+                lowestValue = value;
         }
 
         public void SetDisplayRangeY(float y_start, float y_end)
@@ -220,23 +255,7 @@ namespace GraphLib
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int Length
         {
-            get { return length; }
-            set 
-            { 
-                length = value;
-                if (length != 0)
-                {
-                    samples = new cPoint[length];
-                }
-                else
-                {
-                    // length is 0
-                    if (samples != null)
-                    {
-                        samples = null;
-                    }
-                }
-            }
+            get { return samples.Count; }
         }
         
         [Category("Properties")] // Take this out, and you will soon have problems with serialization;

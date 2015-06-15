@@ -46,12 +46,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox_lowestFilteredData = new System.Windows.Forms.TextBox();
+            this.textBox_highestFilteredData = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox_lowestRawData = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_highestRawData = new System.Windows.Forms.TextBox();
             this.display = new GraphLib.PlotterDisplayEx();
             this.openFileDialogIn = new System.Windows.Forms.OpenFileDialog();
             this.button_autoScaleY = new System.Windows.Forms.Button();
@@ -62,7 +62,7 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.BackColor = System.Drawing.Color.DarkGray;
+            this.toolStrip1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripSeparator1,
@@ -158,17 +158,17 @@
             // 
             // panel_info
             // 
-            this.panel_info.BackColor = System.Drawing.Color.DarkGray;
+            this.panel_info.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panel_info.Controls.Add(this.label6);
             this.panel_info.Controls.Add(this.label5);
             this.panel_info.Controls.Add(this.label3);
             this.panel_info.Controls.Add(this.label4);
-            this.panel_info.Controls.Add(this.textBox3);
-            this.panel_info.Controls.Add(this.textBox4);
+            this.panel_info.Controls.Add(this.textBox_lowestFilteredData);
+            this.panel_info.Controls.Add(this.textBox_highestFilteredData);
             this.panel_info.Controls.Add(this.label2);
-            this.panel_info.Controls.Add(this.textBox2);
+            this.panel_info.Controls.Add(this.textBox_lowestRawData);
             this.panel_info.Controls.Add(this.label1);
-            this.panel_info.Controls.Add(this.textBox1);
+            this.panel_info.Controls.Add(this.textBox_highestRawData);
             this.panel_info.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel_info.Location = new System.Drawing.Point(753, 0);
             this.panel_info.Name = "panel_info";
@@ -211,19 +211,19 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "Highest Y";
             // 
-            // textBox3
+            // textBox_lowestFilteredData
             // 
-            this.textBox3.Location = new System.Drawing.Point(0, 348);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(82, 20);
-            this.textBox3.TabIndex = 9;
+            this.textBox_lowestFilteredData.Location = new System.Drawing.Point(0, 348);
+            this.textBox_lowestFilteredData.Name = "textBox_lowestFilteredData";
+            this.textBox_lowestFilteredData.Size = new System.Drawing.Size(82, 20);
+            this.textBox_lowestFilteredData.TabIndex = 9;
             // 
-            // textBox4
+            // textBox_highestFilteredData
             // 
-            this.textBox4.Location = new System.Drawing.Point(0, 294);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(82, 20);
-            this.textBox4.TabIndex = 7;
+            this.textBox_highestFilteredData.Location = new System.Drawing.Point(0, 294);
+            this.textBox_highestFilteredData.Name = "textBox_highestFilteredData";
+            this.textBox_highestFilteredData.Size = new System.Drawing.Size(82, 20);
+            this.textBox_highestFilteredData.TabIndex = 7;
             // 
             // label2
             // 
@@ -234,12 +234,12 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Lowest Y";
             // 
-            // textBox2
+            // textBox_lowestRawData
             // 
-            this.textBox2.Location = new System.Drawing.Point(0, 146);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(82, 20);
-            this.textBox2.TabIndex = 5;
+            this.textBox_lowestRawData.Location = new System.Drawing.Point(0, 146);
+            this.textBox_lowestRawData.Name = "textBox_lowestRawData";
+            this.textBox_lowestRawData.Size = new System.Drawing.Size(82, 20);
+            this.textBox_lowestRawData.TabIndex = 5;
             // 
             // label1
             // 
@@ -250,12 +250,12 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Highest Y";
             // 
-            // textBox1
+            // textBox_highestRawData
             // 
-            this.textBox1.Location = new System.Drawing.Point(0, 92);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(82, 20);
-            this.textBox1.TabIndex = 3;
+            this.textBox_highestRawData.Location = new System.Drawing.Point(0, 92);
+            this.textBox_highestRawData.Name = "textBox_highestRawData";
+            this.textBox_highestRawData.Size = new System.Drawing.Size(82, 20);
+            this.textBox_highestRawData.TabIndex = 3;
             // 
             // display
             // 
@@ -281,7 +281,6 @@
             // 
             // button_autoScaleY
             // 
-            this.button_autoScaleY.Enabled = false;
             this.button_autoScaleY.Location = new System.Drawing.Point(184, 0);
             this.button_autoScaleY.Name = "button_autoScaleY";
             this.button_autoScaleY.Size = new System.Drawing.Size(72, 24);
@@ -326,14 +325,14 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_single;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_dual;
         private System.Windows.Forms.Button button_autoScaleY;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_highestRawData;
         private System.Windows.Forms.Panel panel_info;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox_lowestFilteredData;
+        private System.Windows.Forms.TextBox textBox_highestFilteredData;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox_lowestRawData;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
