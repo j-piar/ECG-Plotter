@@ -55,9 +55,14 @@
             this.display = new GraphLib.PlotterDisplayEx();
             this.openFileDialogIn = new System.Windows.Forms.OpenFileDialog();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
             this.panel_info.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -159,16 +164,7 @@
             // panel_info
             // 
             this.panel_info.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel_info.Controls.Add(this.label6);
-            this.panel_info.Controls.Add(this.label5);
-            this.panel_info.Controls.Add(this.label3);
-            this.panel_info.Controls.Add(this.label4);
-            this.panel_info.Controls.Add(this.textBox_lowestFilteredData);
-            this.panel_info.Controls.Add(this.textBox_highestFilteredData);
-            this.panel_info.Controls.Add(this.label2);
-            this.panel_info.Controls.Add(this.textBox_lowestRawData);
-            this.panel_info.Controls.Add(this.label1);
-            this.panel_info.Controls.Add(this.textBox_highestRawData);
+            this.panel_info.Controls.Add(this.splitContainer1);
             this.panel_info.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel_info.Location = new System.Drawing.Point(753, 0);
             this.panel_info.Name = "panel_info";
@@ -178,7 +174,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 80);
+            this.label6.Location = new System.Drawing.Point(16, 67);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 13;
@@ -187,7 +183,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 253);
+            this.label5.Location = new System.Drawing.Point(18, 17);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
             this.label5.TabIndex = 12;
@@ -196,7 +192,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 332);
+            this.label3.Location = new System.Drawing.Point(18, 96);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 13);
             this.label3.TabIndex = 11;
@@ -205,7 +201,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 278);
+            this.label4.Location = new System.Drawing.Point(16, 42);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 13);
             this.label4.TabIndex = 10;
@@ -213,7 +209,7 @@
             // 
             // textBox_lowestFilteredData
             // 
-            this.textBox_lowestFilteredData.Location = new System.Drawing.Point(0, 348);
+            this.textBox_lowestFilteredData.Location = new System.Drawing.Point(2, 112);
             this.textBox_lowestFilteredData.Name = "textBox_lowestFilteredData";
             this.textBox_lowestFilteredData.ReadOnly = true;
             this.textBox_lowestFilteredData.Size = new System.Drawing.Size(82, 20);
@@ -221,7 +217,7 @@
             // 
             // textBox_highestFilteredData
             // 
-            this.textBox_highestFilteredData.Location = new System.Drawing.Point(0, 294);
+            this.textBox_highestFilteredData.Location = new System.Drawing.Point(2, 58);
             this.textBox_highestFilteredData.Name = "textBox_highestFilteredData";
             this.textBox_highestFilteredData.ReadOnly = true;
             this.textBox_highestFilteredData.Size = new System.Drawing.Size(82, 20);
@@ -230,7 +226,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 157);
+            this.label2.Location = new System.Drawing.Point(16, 144);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(51, 13);
             this.label2.TabIndex = 6;
@@ -238,7 +234,7 @@
             // 
             // textBox_lowestRawData
             // 
-            this.textBox_lowestRawData.Location = new System.Drawing.Point(0, 173);
+            this.textBox_lowestRawData.Location = new System.Drawing.Point(0, 160);
             this.textBox_lowestRawData.Name = "textBox_lowestRawData";
             this.textBox_lowestRawData.ReadOnly = true;
             this.textBox_lowestRawData.Size = new System.Drawing.Size(82, 20);
@@ -247,7 +243,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 103);
+            this.label1.Location = new System.Drawing.Point(14, 90);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 4;
@@ -255,7 +251,7 @@
             // 
             // textBox_highestRawData
             // 
-            this.textBox_highestRawData.Location = new System.Drawing.Point(0, 119);
+            this.textBox_highestRawData.Location = new System.Drawing.Point(0, 106);
             this.textBox_highestRawData.Name = "textBox_highestRawData";
             this.textBox_highestRawData.ReadOnly = true;
             this.textBox_highestRawData.Size = new System.Drawing.Size(82, 20);
@@ -294,6 +290,36 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.Click += new System.EventHandler(this.checkBox1_Click);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.splitContainer1.Panel1.Controls.Add(this.label6);
+            this.splitContainer1.Panel1.Controls.Add(this.textBox_lowestRawData);
+            this.splitContainer1.Panel1.Controls.Add(this.textBox_highestRawData);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.splitContainer1.Panel2.Controls.Add(this.label5);
+            this.splitContainer1.Panel2.Controls.Add(this.textBox_highestFilteredData);
+            this.splitContainer1.Panel2.Controls.Add(this.label3);
+            this.splitContainer1.Panel2.Controls.Add(this.textBox_lowestFilteredData);
+            this.splitContainer1.Panel2.Controls.Add(this.label4);
+            this.splitContainer1.Size = new System.Drawing.Size(84, 439);
+            this.splitContainer1.SplitterDistance = 235;
+            this.splitContainer1.TabIndex = 14;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,13 +328,19 @@
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.toolStrip1);
+            this.MinimumSize = new System.Drawing.Size(580, 400);
             this.Name = "MainForm";
             this.Text = "ECG Plotter";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.mainPanel.ResumeLayout(false);
             this.panel_info.ResumeLayout(false);
-            this.panel_info.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -341,6 +373,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 
