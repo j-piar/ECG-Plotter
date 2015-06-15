@@ -53,8 +53,8 @@ namespace GraphLib
         public Color GraphColor = Color.DarkGreen;
         public Color BgndColorTop = Color.White;
         public Color BgndColorBot = Color.White;
-        public Color LabelColor = Color.White;
-        public Color GraphBoxColor = Color.White;
+        public Color LabelColor = Color.Black;
+        public Color GraphBoxColor = Color.Red;
         public bool useDoubleBuffer = false;
         public Font legendFont = new Font(FontFamily.GenericSansSerif, 8.25f);
       
@@ -740,11 +740,11 @@ namespace GraphLib
         Color CurGridColor = MajorGridColor;
         Color CurMinGridClor = MinorGridColor;
 
-        if (layout == LayoutMode.NORMAL && source.AutoScaleY)
+        /*if (layout == LayoutMode.NORMAL && source.AutoScaleY)
         {
             CurGridColor = source.GraphColor;
             CurMinGridClor = source.GraphColor;
-        }
+        }*/
 
         using (Pen minorGridPen = new Pen(CurMinGridClor))
         {

@@ -85,12 +85,12 @@ namespace ECG_Plotter
             display.Refresh();
         }
 
-        private Color colourChooser(int i)
+        private Color generateColour(int i)
         {
             Color[] colours = 
             {
-                Color.DarkCyan,
-                Color.DeepPink,
+                Color.DimGray,
+                Color.Black,
             };
             return colours[i];
         }
@@ -114,7 +114,7 @@ namespace ECG_Plotter
                 {
                     x = float.Parse(node_dataPoint.Attributes[0].Value);
                     y = (float)decimal.Parse(node_dataPoint.Attributes[1].Value, System.Globalization.NumberStyles.Float);
-                    ds.Samples.Add(new cPoint(x * 100, y * 100));
+                    ds.Samples.Add(new cPoint(x * 1000, y * 1000));
                     ds.findExtremes(y);
                     i++;
                 }
@@ -124,26 +124,26 @@ namespace ECG_Plotter
         private void setAllGraphsToDeafault(DataSource ds, PointDataType type)
         {
             ds.Name = type.ToString();
-            ds.GraphColor = colourChooser((int)type);
+            ds.GraphColor = generateColour((int)type);
             ds.OnRenderXAxisLabel += RenderXLabel;
             ds.AutoScaleY = false;
-            ds.SetDisplayRangeY(-2, 2);
+            ds.SetDisplayRangeY((float)-3.5, (float)3.5);
             ds.SetGridOriginY(0);
             ds.SetGridDistanceY(1);
             ds.OnRenderYAxisLabel += RenderYLabel;
         }
         private void setDisplayToDefault()
         {
-            display.SetDisplayRangeX(0, 400);
-            display.SetGridDistanceX(50);
-            display.SetGridOriginX(500);
+            display.SetDisplayRangeX(0, 800);
+            display.SetGridDistanceX(100);
+            display.SetGridOriginX(0);
             display.Smoothing = System.Drawing.Drawing2D.SmoothingMode.None;
             display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
 
             display.BackgroundColorBot = Color.White;
-            display.BackgroundColorTop = Color.FromArgb(183, 183, 255);
-            display.SolidGridColor = Color.Blue;
-            display.DashedGridColor = Color.Blue;
+            display.BackgroundColorTop = Color.PapayaWhip;
+            display.SolidGridColor = Color.Red;
+            display.DashedGridColor = Color.Red;
             display.ShowMovingGrid = false;
         }
         private enum PointDataType
@@ -155,12 +155,12 @@ namespace ECG_Plotter
         {
             if (s.AutoScaleX)
             {
-                int Value = (int)(s.Samples[idx].x);
+                float Value = (s.Samples[idx].x);
                 return "" + Value;
             }
             else
             {
-                int Value = (int)(s.Samples[idx].x);
+                float Value = (s.Samples[idx].x)/1000;
                 String Label = "" + Value + "\"";
                 return Label;
             }
@@ -168,35 +168,38 @@ namespace ECG_Plotter
 
         private String RenderYLabel(DataSource s, float value)
         {
-            return String.Format("{0:0.000}", value/100);
+            return String.Format("{0:0}mV", value);
         }
         int tInc;
+
+        /// <summary>
+        /// Event function to zoom the plot in/out 
+        /// </summary>
         private void display_MouseWheel(object sender, MouseEventArgs e)
         {
 
-            // fix mouse scroll to 1 notch
             int deltaFix, deltaCount;
             float pluginNumber;
             float zDetail;
             PointF CurRangeY, CurRangeX;
-            bool autoScaleOn = false;
 
             switch (display.PanelLayout)
             {
                 case PlotterGraphPaneEx.LayoutMode.NORMAL:
-                    deltaCount = 3;
+                    deltaCount = 5;
                     zDetail = (float)0.5;
                     break;
                 case PlotterGraphPaneEx.LayoutMode.STACKED:
-                    deltaCount = 3;
+                    deltaCount = 5;
                     zDetail = (float)0.5;
                     break;
                 default:
-                    deltaCount = 3;
+                    deltaCount = 5;
                     zDetail = (float)0.5;
                     break;
             }
 
+            // fix mouse scroll to 1 notch
             if (e.Delta < -120)
                 deltaFix = -120;
             else if (e.Delta > 120)
@@ -206,21 +209,18 @@ namespace ECG_Plotter
             pluginNumber = deltaFix < 0 ? (float)-zDetail : (float)zDetail;
             tInc += deltaFix;
 
-            if ((tInc < 0 ? -tInc : tInc) <= deltaCount * 120)
+            if ((tInc < 0 ? -tInc : tInc/2) <= deltaCount * 120)
             {
+                Console.Out.WriteLine("---------------------------------");
                 foreach (DataSource source in display.DataSources)
                 {
-                    if (!source.AutoScaleY)
-                    {
                         CurRangeY = source.GetDisplayRangeY();
                         source.SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
-                    }
+                        Console.Out.WriteLine("Range Y: {0}", source.GetDisplayRangeY());
                 }
-                if (!autoScaleOn)
-                {
-                    CurRangeX = display.GetDisplayRangeX();
-                    display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
-                }
+                CurRangeX = display.GetDisplayRangeX();
+                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
+                Console.Out.WriteLine("Range X: {0}", display.GetDisplayRangeX());
             }
             else
                 tInc -= deltaFix;
@@ -233,22 +233,47 @@ namespace ECG_Plotter
             {
                 s.AutoScaleY = true;
             }
-            this.button_autoScaleY.Enabled = true;
+            this.checkBox1.Checked = true;
         }
 
         private void toolStripMenuItem_dual_Click(object sender, EventArgs e)
         {
             this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
+            foreach (DataSource s in display.DataSources)
+            {
+                s.AutoScaleY = false;
+            }
+            this.checkBox1.Checked = false;
         }
 
         private void button_autoScaleY_Click(object sender, EventArgs e)
         {
-            foreach (DataSource s in display.DataSources)
+            
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            switch (this.checkBox1.CheckState)
             {
-                if (s.AutoScaleY)
-                    s.AutoScaleY = false;
-                else
-                    s.AutoScaleY = true;
+                case CheckState.Unchecked:
+                    foreach (DataSource s in display.DataSources)
+                    {
+                        if (s.AutoScaleY)
+                            s.AutoScaleY = false;
+                    }
+                    break;
+                case CheckState.Checked:
+                    foreach (DataSource s in display.DataSources)
+                    {
+                        if (!s.AutoScaleY)
+                            s.AutoScaleY = true;
+                    }
+                    break;
             }
         }
     }

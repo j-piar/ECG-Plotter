@@ -54,7 +54,7 @@
             this.textBox_highestRawData = new System.Windows.Forms.TextBox();
             this.display = new GraphLib.PlotterDisplayEx();
             this.openFileDialogIn = new System.Windows.Forms.OpenFileDialog();
-            this.button_autoScaleY = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
             this.panel_info.SuspendLayout();
@@ -178,7 +178,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 53);
+            this.label6.Location = new System.Drawing.Point(16, 80);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 13;
@@ -215,6 +215,7 @@
             // 
             this.textBox_lowestFilteredData.Location = new System.Drawing.Point(0, 348);
             this.textBox_lowestFilteredData.Name = "textBox_lowestFilteredData";
+            this.textBox_lowestFilteredData.ReadOnly = true;
             this.textBox_lowestFilteredData.Size = new System.Drawing.Size(82, 20);
             this.textBox_lowestFilteredData.TabIndex = 9;
             // 
@@ -222,13 +223,14 @@
             // 
             this.textBox_highestFilteredData.Location = new System.Drawing.Point(0, 294);
             this.textBox_highestFilteredData.Name = "textBox_highestFilteredData";
+            this.textBox_highestFilteredData.ReadOnly = true;
             this.textBox_highestFilteredData.Size = new System.Drawing.Size(82, 20);
             this.textBox_highestFilteredData.TabIndex = 7;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 130);
+            this.label2.Location = new System.Drawing.Point(16, 157);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(51, 13);
             this.label2.TabIndex = 6;
@@ -236,15 +238,16 @@
             // 
             // textBox_lowestRawData
             // 
-            this.textBox_lowestRawData.Location = new System.Drawing.Point(0, 146);
+            this.textBox_lowestRawData.Location = new System.Drawing.Point(0, 173);
             this.textBox_lowestRawData.Name = "textBox_lowestRawData";
+            this.textBox_lowestRawData.ReadOnly = true;
             this.textBox_lowestRawData.Size = new System.Drawing.Size(82, 20);
             this.textBox_lowestRawData.TabIndex = 5;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 76);
+            this.label1.Location = new System.Drawing.Point(14, 103);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 4;
@@ -252,8 +255,9 @@
             // 
             // textBox_highestRawData
             // 
-            this.textBox_highestRawData.Location = new System.Drawing.Point(0, 92);
+            this.textBox_highestRawData.Location = new System.Drawing.Point(0, 119);
             this.textBox_highestRawData.Name = "textBox_highestRawData";
+            this.textBox_highestRawData.ReadOnly = true;
             this.textBox_highestRawData.Size = new System.Drawing.Size(82, 20);
             this.textBox_highestRawData.TabIndex = 3;
             // 
@@ -279,22 +283,23 @@
             // 
             this.openFileDialogIn.FileName = "openFileDialogIn";
             // 
-            // button_autoScaleY
+            // checkBox1
             // 
-            this.button_autoScaleY.Location = new System.Drawing.Point(184, 0);
-            this.button_autoScaleY.Name = "button_autoScaleY";
-            this.button_autoScaleY.Size = new System.Drawing.Size(72, 24);
-            this.button_autoScaleY.TabIndex = 2;
-            this.button_autoScaleY.Text = "AutoScaleY";
-            this.button_autoScaleY.UseVisualStyleBackColor = true;
-            this.button_autoScaleY.Click += new System.EventHandler(this.button_autoScaleY_Click);
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(168, 2);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(78, 17);
+            this.checkBox1.TabIndex = 4;
+            this.checkBox1.Text = "Auto Scale";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Click += new System.EventHandler(this.checkBox1_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(837, 463);
-            this.Controls.Add(this.button_autoScaleY);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "MainForm";
@@ -324,7 +329,6 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton_dMode;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_single;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_dual;
-        private System.Windows.Forms.Button button_autoScaleY;
         private System.Windows.Forms.TextBox textBox_highestRawData;
         private System.Windows.Forms.Panel panel_info;
         private System.Windows.Forms.Label label3;
@@ -336,6 +340,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

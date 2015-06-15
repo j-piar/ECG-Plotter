@@ -36,6 +36,7 @@ namespace GraphLib
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.selectGraphsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gPane = new GraphLib.PlotterGraphPaneEx();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -167,6 +168,8 @@ namespace GraphLib
             this.hScrollBar1.Size = new System.Drawing.Size(118, 10);
             this.hScrollBar1.TabIndex = 4;
             this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnScrollbarScroll);
+            this.hScrollBar1.MouseEnter += new System.EventHandler(this.hScrollBar1_MouseEnter);
+            this.hScrollBar1.MouseHover += new System.EventHandler(this.hScrollBar1_MouseEnter);
             // 
             // hScrollBar2
             // 
@@ -177,6 +180,8 @@ namespace GraphLib
             this.hScrollBar2.TabIndex = 6;
             this.hScrollBar2.Value = 1;
             this.hScrollBar2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnScrollBarSpeedScroll);
+            this.hScrollBar2.Enter += new System.EventHandler(this.selectGraphsToolStripMenuItem_Click);
+            this.hScrollBar2.MouseEnter += new System.EventHandler(this.hScrollBar1_MouseEnter);
             // 
             // contextMenuStrip1
             // 
@@ -205,6 +210,7 @@ namespace GraphLib
             this.gPane.Name = "gPane";
             this.gPane.Size = new System.Drawing.Size(598, 301);
             this.gPane.TabIndex = 1;
+            this.gPane.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gPane_KeyDown);
             // 
             // PlotterDisplayEx
             // 
@@ -246,6 +252,7 @@ namespace GraphLib
         private System.Windows.Forms.ToolBarButton tbbPrint;
         private System.Windows.Forms.ToolBarButton toolBarButton2;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolTip toolTip1;
 
     }
 }
