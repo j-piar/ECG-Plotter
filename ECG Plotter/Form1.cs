@@ -5,38 +5,42 @@ using System.Xml;
 using System.Linq;
 using System.Windows.Forms;
 using GraphLib;
-using System.Threading;
 using System.Drawing;
 
 namespace ECG_Plotter
 {
     public partial class MainForm : Form
     {
+        #region MEMBERS
         private XmlDocument doc = null;
-        private object pad_lock = new object();
+        DataSource ds = null;
+        private int tInc;
+        #endregion
 
+        #region CONSTRUCTORS
         public MainForm()
         {
             InitializeComponent();
-
         }
+        #endregion
 
+        #region EVENT FUNCTIONS
         /// <summary>
-        /// Event function loading the file
+        /// Open button event function - executes process of loading and displaying XML data
         /// </summary>
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 openFileDialogIn.CheckFileExists = true;
-                DialogResult openDialog = openFileDialogIn.ShowDialog();
+                var openDialog = openFileDialogIn.ShowDialog();
 
                 if (openDialog == DialogResult.OK)
                 {
-                    string path = openFileDialogIn.FileName; // The Path to the .Xml file
-                    FileStream fileReader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); //Set up the filestream (fileReader)
+                    var path = openFileDialogIn.FileName;
+                    var fileReader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     doc = new XmlDocument();
-                    doc.Load(fileReader); //Load the data from the file into the XmlDocument
+                    doc.Load(fileReader);
                 }
             }
             catch (Exception exc)
@@ -45,9 +49,9 @@ namespace ECG_Plotter
             }
             try
             {
-                if (!doc.Equals(null)) // if file loaded to XMLDocument doc
+                if (!doc.Equals(null))
                 {
-                    this.toolStripDropDownButton_dMode.Enabled = true;
+                    toolStripDropDownButton_dMode.Enabled = true;
                     processData();
                 }
             }
@@ -57,56 +61,197 @@ namespace ECG_Plotter
             }
         }
 
+        /// <summary>
+        /// Exit button event function
+        /// </summary>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
         /// <summary>
+        /// Event function to zoom the plot in/out 
+        /// </summary>
+        private void display_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int deltaFix, deltaCount;
+            float pluginNumber;
+            float zDetail;
+            PointF CurRangeY, CurRangeX;
+            
+            deltaCount = 5; //max zoom -/+ level
+            zDetail = (float)0.5; //number by which Y is zoomed
+
+            // Fix delta to 120
+            if (e.Delta < -120)
+            {
+                deltaFix = -120;
+            }
+            else
+            {
+                if (e.Delta > 120)
+                {
+                    deltaFix = 120;
+                }
+                else
+                {
+                    deltaFix = e.Delta;
+                }
+            }
+            pluginNumber = deltaFix < 0 ? (float)-zDetail : (float)zDetail; 
+            tInc += deltaFix;
+
+            if ((tInc < 0 ? -tInc : tInc / 2) <= deltaCount * 120)
+            {
+                foreach (DataSource source in display.DataSources)
+                {
+                    CurRangeY = source.GetDisplayRangeY();
+                    source.SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
+                }
+                CurRangeX = display.GetDisplayRangeX();
+                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
+            }
+            else
+            {
+                tInc -= deltaFix;
+            }
+        }
+
+        /// <summary>
+        /// Set display to a single view
+        /// </summary>
+        private void toolStripMenuItem_single_Click(object sender, EventArgs e)
+        {
+            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.NORMAL;
+            foreach (DataSource s in display.DataSources)
+            {
+                s.AutoScaleY = true;
+            }
+            checkBox1.Checked = true;
+        }
+
+        /// <summary>
+        /// Set display to dual view
+        /// </summary>
+        private void toolStripMenuItem_dual_Click(object sender, EventArgs e)
+        {
+            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
+            foreach (DataSource s in display.DataSources)
+            {
+                s.AutoScaleY = false;
+            }
+            checkBox1.Checked = false;
+        }
+        
+        /// <summary>
+        /// Toggle Auto scale mode
+        /// </summary>
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            switch (checkBox1.CheckState)
+            {
+                case CheckState.Unchecked:
+                    foreach (DataSource s in display.DataSources)
+                    {
+                        if (s.AutoScaleY)
+                        {
+                            s.AutoScaleY = false;
+                        }
+                    }
+                    break;
+                case CheckState.Checked:
+                    foreach (DataSource s in display.DataSources)
+                    {
+                        if (!s.AutoScaleY)
+                        {
+                            s.AutoScaleY = true;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Event function that sets values to draw as labels of the X axis
+        /// </summary>
+        /// <param name="s">Data source to get values from.</param>
+        /// <param name="idx">Index number of current value</param>
+        /// <returns></returns>
+        private String RenderXLabel(DataSource s, int idx)
+        {
+            if (s.AutoScaleX)
+            {
+                var Value = (s.Samples[idx].x);
+                return string.Empty + Value;
+            }
+            else
+            {
+                var Value = (s.Samples[idx].x) / 1000;
+                var Label = string.Empty + Value + "\"";
+                return Label;
+            }
+        }
+
+        /// <summary>
+        /// Event function that sets values to draw as labels of the Y axis
+        /// </summary>
+        /// <param name="s">Data source to get values from.</param>
+        /// <param name="idx">Index number of current value</param>
+        /// <returns></returns>
+        private String RenderYLabel(DataSource s, float value)
+        {
+            return String.Format("{0:0}mV", value);
+        }
+        #endregion
+
+        #region PRIVATE FUNCTIONS
+        /// <summary>
         /// Setup PlotterGraph and extract data from the XML file
         /// </summary>
         private void processData()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             display.DataSources.Clear();
             setDisplayToDefault();
 
-            calcData(PointDataType.RawData);
+            //load the dataPoints to display.DataSources
+            calcData(PointDataType.RawData); 
             calcData(PointDataType.FilteredData);
-            //new Thread(() => calcData(PointDataType.RawData)).Start();
-            //Thread.Sleep(100);
-            //new Thread(() => calcData(PointDataType.FilteredData)).Start();
-            this.ResumeLayout();
 
-            this.textBox_highestRawData.Text = display.DataSources[0].HighestValue.ToString();
-            this.textBox_lowestRawData.Text = display.DataSources[0].LowestValue.ToString();
-            this.textBox_highestFilteredData.Text = display.DataSources[1].HighestValue.ToString();
-            this.textBox_lowestFilteredData.Text = display.DataSources[1].LowestValue.ToString();
+            ResumeLayout();
+            
+            //Show Extremes
+            textBox_highestRawData.Text = display.DataSources[0].HighestValue.ToString();
+            textBox_lowestRawData.Text = display.DataSources[0].LowestValue.ToString();
+            textBox_highestFilteredData.Text = display.DataSources[1].HighestValue.ToString();
+            textBox_lowestFilteredData.Text = display.DataSources[1].LowestValue.ToString();
             display.Refresh();
         }
 
+        /// <summary>
+        /// Set colour to data plot
+        /// </summary>
+        /// <param name="i">Plot`s index number</param>
+        /// <returns>Colour for plot</returns>
         private Color generateColour(int i)
         {
-            Color[] colours = 
-            {
-                Color.DimGray,
-                Color.Black,
-            };
+            var colours = new Color[] { Color.DimGray,
+                Color.Black };
             return colours[i];
         }
 
+        /// <summary>
+        /// Loads and calculates plots` data points from XML nodes
+        /// </summary>
+        /// <param name="type">decides what type of data is beeing loaded in</param>
         private void calcData(PointDataType type)
         {
-            DataSource ds;
             float x, y;
-            lock (pad_lock)
-            {
-                display.DataSources.Add(new DataSource());
-                ds = display.DataSources[(int)type]; // set the default settings for the new graph
-                setAllGraphsToDeafault(ds, type);
-            }
-            XmlNodeList fData = doc.GetElementsByTagName(type.ToString());
-            int i = 0;
+            display.DataSources.Add(new DataSource());
+            ds = display.DataSources[(int)type];
+            setAllGraphsToDeafault(ds, type);
+            var fData = doc.GetElementsByTagName(type.ToString());
+            var i = 0;
             foreach (XmlNode node_dataType in fData)
             {
                 ds.Samples = new List<cPoint>();
@@ -120,7 +265,12 @@ namespace ECG_Plotter
                 }
             }
         }
-        delegate void SetTextCallback(string text);
+
+        /// <summary>
+        /// Sets/Resets properties of data sources to their defaults
+        /// </summary>
+        /// <param name="ds">Data source to reset</param>
+        /// <param name="type">Type of data to reset</param>
         private void setAllGraphsToDeafault(DataSource ds, PointDataType type)
         {
             ds.Name = type.ToString();
@@ -132,6 +282,10 @@ namespace ECG_Plotter
             ds.SetGridDistanceY(1);
             ds.OnRenderYAxisLabel += RenderYLabel;
         }
+
+        /// <summary>
+        /// Sets/Resets graph plotter to its defaults
+        /// </summary>
         private void setDisplayToDefault()
         {
             display.SetDisplayRangeX(0, 800);
@@ -146,135 +300,15 @@ namespace ECG_Plotter
             display.DashedGridColor = Color.Red;
             display.ShowMovingGrid = false;
         }
+        #endregion
+
+        /// <summary>
+        /// Enumeration of types of data points
+        /// </summary>
         private enum PointDataType
         {
             RawData = 0,
             FilteredData = 1
-        }
-        private String RenderXLabel(DataSource s, int idx)
-        {
-            if (s.AutoScaleX)
-            {
-                float Value = (s.Samples[idx].x);
-                return "" + Value;
-            }
-            else
-            {
-                float Value = (s.Samples[idx].x)/1000;
-                String Label = "" + Value + "\"";
-                return Label;
-            }
-        }
-
-        private String RenderYLabel(DataSource s, float value)
-        {
-            return String.Format("{0:0}mV", value);
-        }
-        int tInc;
-
-        /// <summary>
-        /// Event function to zoom the plot in/out 
-        /// </summary>
-        private void display_MouseWheel(object sender, MouseEventArgs e)
-        {
-
-            int deltaFix, deltaCount;
-            float pluginNumber;
-            float zDetail;
-            PointF CurRangeY, CurRangeX;
-
-            switch (display.PanelLayout)
-            {
-                case PlotterGraphPaneEx.LayoutMode.NORMAL:
-                    deltaCount = 5;
-                    zDetail = (float)0.5;
-                    break;
-                case PlotterGraphPaneEx.LayoutMode.STACKED:
-                    deltaCount = 5;
-                    zDetail = (float)0.5;
-                    break;
-                default:
-                    deltaCount = 5;
-                    zDetail = (float)0.5;
-                    break;
-            }
-
-            // fix mouse scroll to 1 notch
-            if (e.Delta < -120)
-                deltaFix = -120;
-            else if (e.Delta > 120)
-                deltaFix = 120;
-            else
-                deltaFix = e.Delta;
-            pluginNumber = deltaFix < 0 ? (float)-zDetail : (float)zDetail;
-            tInc += deltaFix;
-
-            if ((tInc < 0 ? -tInc : tInc/2) <= deltaCount * 120)
-            {
-                Console.Out.WriteLine("---------------------------------");
-                foreach (DataSource source in display.DataSources)
-                {
-                        CurRangeY = source.GetDisplayRangeY();
-                        source.SetDisplayRangeY(CurRangeY.X - pluginNumber, CurRangeY.Y + pluginNumber);
-                        Console.Out.WriteLine("Range Y: {0}", source.GetDisplayRangeY());
-                }
-                CurRangeX = display.GetDisplayRangeX();
-                display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
-                Console.Out.WriteLine("Range X: {0}", display.GetDisplayRangeX());
-            }
-            else
-                tInc -= deltaFix;
-        }
-
-        private void toolStripMenuItem_single_Click(object sender, EventArgs e)
-        {
-            this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.NORMAL;
-            foreach (DataSource s in display.DataSources)
-            {
-                s.AutoScaleY = true;
-            }
-            this.checkBox1.Checked = true;
-        }
-
-        private void toolStripMenuItem_dual_Click(object sender, EventArgs e)
-        {
-            this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
-            foreach (DataSource s in display.DataSources)
-            {
-                s.AutoScaleY = false;
-            }
-            this.checkBox1.Checked = false;
-        }
-
-        private void button_autoScaleY_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void checkBox1_Click(object sender, EventArgs e)
-        {
-            switch (this.checkBox1.CheckState)
-            {
-                case CheckState.Unchecked:
-                    foreach (DataSource s in display.DataSources)
-                    {
-                        if (s.AutoScaleY)
-                            s.AutoScaleY = false;
-                    }
-                    break;
-                case CheckState.Checked:
-                    foreach (DataSource s in display.DataSources)
-                    {
-                        if (!s.AutoScaleY)
-                            s.AutoScaleY = true;
-                    }
-                    break;
-            }
         }
     }
 }
