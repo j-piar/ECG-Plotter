@@ -433,5 +433,18 @@ namespace GraphLib
           //  GraphPropertiesForm.BringToFront();
 
         }
+
+        private void gPane_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+                Start();
+            }
+        }
+
+        private void hScrollBar1_MouseEnter(object sender, EventArgs e)
+        {
+            this.toolTip1.SetToolTip((ScrollBar)sender, ((ScrollBar)sender).Value.ToString());
+        }
     }
 }

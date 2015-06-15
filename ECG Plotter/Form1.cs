@@ -5,29 +5,53 @@ using System.Xml;
 using System.Linq;
 using System.Windows.Forms;
 using GraphLib;
-using System.Threading;
 using System.Drawing;
 
 namespace ECG_Plotter
 {
     public partial class MainForm : Form
     {
+        #region MEMBERS
         private XmlDocument doc = null;
-        private object pad_lock = new object();
+        DataSource ds = null;
+        private int tInc;
+        #endregion
 
+        #region CONSTRUCTORS
         public MainForm()
         {
             InitializeComponent();
-
         }
+        #endregion
+
+        #region EVENT FUNCTIONS
+        /// <summary>
+        /// Open button event function - executes process of loading and displaying XML data
+        /// </summary>
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            loadXML();
+            try
+            {
+                openFileDialogIn.CheckFileExists = true;
+                var openDialog = openFileDialogIn.ShowDialog();
+
+                if (openDialog == DialogResult.OK)
+                {
+                    var path = openFileDialogIn.FileName;
+                    var fileReader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    doc = new XmlDocument();
+                    doc.Load(fileReader);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(String.Format("An error occured. Original message: {0}", exc.Message));
+            }
             try
             {
                 if (!doc.Equals(null))
                 {
-                    this.toolStripDropDownButton_dMode.Enabled = true;
+                    toolStripDropDownButton_dMode.Enabled = true;
                     processData();
                 }
             }
@@ -37,180 +61,47 @@ namespace ECG_Plotter
             }
         }
 
+        /// <summary>
+        /// Exit button event function
+        /// </summary>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
         /// <summary>
-        /// Loading XML file using openFileDialog
+        /// Event function to zoom the plot in/out 
         /// </summary>
-        private void loadXML()
-        {
-            try
-            {
-                openFileDialogIn.CheckFileExists = true;
-                DialogResult openDialog = openFileDialogIn.ShowDialog();
-
-                if (openDialog == DialogResult.OK)
-                {
-
-                    string path = openFileDialogIn.FileName; // The Path to the .Xml file
-                    FileStream fileReader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); //Set up the filestream (fileReader)
-                    doc = new XmlDocument();
-                    doc.Load(fileReader); //Load the data from the file into the XmlDocument
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(String.Format("An error occured. Original message: {0}", e.Message));
-            }
-        }
-
-        /// <summary>
-        /// Setup PlotterGraph and extract data from the XML file using separate threads for performance [O(n/2)]
-        /// </summary>
-        private void processData()
-        {
-            this.SuspendLayout();
-            display.DataSources.Clear();
-            setDisplayToDefault();
-
-            new Thread(() => calcData(PointDataType.RawData)).Start();
-            Thread.Sleep(100);
-            new Thread(() => calcData(PointDataType.FilteredData)).Start();
-
-            this.ResumeLayout();
-            display.Refresh();
-        }
-
-        private Color colourChooser(int i)
-        {
-            Color[] colours = 
-            {
-                Color.DarkCyan,
-                Color.DeepPink,
-            };
-            return colours[i];
-        }
-
-        private void calcData(PointDataType type)
-        {
-            DataSource ds;
-            lock (pad_lock)
-            {
-                display.DataSources.Add(new DataSource());
-
-                ds = setAllGraphsToDeafault(type);
-                ds.Length = 500000;
-            }
-            XmlNodeList fData = doc.GetElementsByTagName(type.ToString());
-            int i = 0;
-            foreach (XmlNode node_dataType in fData)
-            {
-                foreach (XmlNode node_dataPoint in node_dataType.ChildNodes)
-                {
-                    if (node_dataPoint.Name == "DataPoint")
-                    {
-                        ds.Samples[i].x = float.Parse(node_dataPoint.Attributes[0].Value) * 100;
-                        ds.Samples[i].y = float.Parse(node_dataPoint.Attributes[1].Value, System.Globalization.NumberStyles.Float) * 100;
-                        i++;
-                    }
-                }
-            }
-        }
-        delegate void SetTextCallback(string text);
-        private DataSource setAllGraphsToDeafault(PointDataType type)
-        {
-            DataSource ds;
-            ds = display.DataSources[(int)type];
-            ds.Name = type.ToString();
-            ds.GraphColor = colourChooser((int)type);
-            ds.OnRenderXAxisLabel += RenderXLabel;
-            ds.AutoScaleY = false;
-            ds.SetDisplayRangeY(-2, 2);
-            ds.SetGridOriginY(0);
-            ds.SetGridDistanceY(1);
-            ds.OnRenderYAxisLabel += RenderYLabel;
-            return ds;
-        }
-        private void setDisplayToDefault()
-        {
-            display.SetDisplayRangeX(0, 400);
-            display.SetGridDistanceX(50);
-            display.SetGridOriginX(500);
-            display.Smoothing = System.Drawing.Drawing2D.SmoothingMode.None;
-            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
-
-            display.BackgroundColorBot = Color.White;
-            display.BackgroundColorTop = Color.FromArgb(183, 183, 255);
-            display.SolidGridColor = Color.Blue;
-            display.DashedGridColor = Color.Blue;
-            display.ShowMovingGrid = false;
-        }
-        private enum PointDataType
-        {
-            RawData = 0,
-            FilteredData = 1
-        }
-        private String RenderXLabel(DataSource s, int idx)
-        {
-            if (s.AutoScaleX)
-            {
-                int Value = (int)(s.Samples[idx].x);
-                return "" + Value;
-            }
-            else
-            {
-                int Value = (int)(s.Samples[idx].x);
-                String Label = "" + Value/100 + "\"";
-                return Label;
-            }
-        }
-
-        private String RenderYLabel(DataSource s, float value)
-        {
-            foreach (DataSource source in display.DataSources)
-            {
-                Console.Out.WriteLine("Y value: {0},  dY: {1} and Cur_YD1 is {2}", value, source.DY, source.Cur_YD1 );
-            }
-            return String.Format("{0:0.000}", value);
-        }
-        int tInc;
         private void display_MouseWheel(object sender, MouseEventArgs e)
         {
-            // fix mouse scroll to 1 notch
             int deltaFix, deltaCount;
             float pluginNumber;
             float zDetail;
             PointF CurRangeY, CurRangeX;
+            
+            deltaCount = 5; //max zoom -/+ level
+            zDetail = (float)0.5; //number by which Y is zoomed
 
-            switch (display.PanelLayout)
-            {
-                case PlotterGraphPaneEx.LayoutMode.NORMAL:
-                    deltaCount = 3;
-                    zDetail = (float)0.5;
-                    break;
-                case PlotterGraphPaneEx.LayoutMode.STACKED:
-                    deltaCount = 3;
-                    zDetail = (float)0.5;
-                    break;
-                default:
-                    deltaCount = 3;
-                    zDetail = (float)0.5;
-                    break;
-            }
-
+            // Fix delta to 120
             if (e.Delta < -120)
+            {
                 deltaFix = -120;
-            else if (e.Delta > 120)
-                deltaFix = 120;
+            }
             else
-                deltaFix = e.Delta;
-            pluginNumber = deltaFix < 0 ? (float)-zDetail : (float)zDetail;
+            {
+                if (e.Delta > 120)
+                {
+                    deltaFix = 120;
+                }
+                else
+                {
+                    deltaFix = e.Delta;
+                }
+            }
+            pluginNumber = deltaFix < 0 ? (float)-zDetail : (float)zDetail; 
             tInc += deltaFix;
 
-            if ((tInc < 0 ? -tInc : tInc) <= deltaCount * 120)
+            if ((tInc < 0 ? -tInc : tInc / 2) <= deltaCount * 120)
             {
                 foreach (DataSource source in display.DataSources)
                 {
@@ -221,33 +112,203 @@ namespace ECG_Plotter
                 display.SetDisplayRangeX(CurRangeX.X, CurRangeX.Y + deltaFix);
             }
             else
+            {
                 tInc -= deltaFix;
+            }
         }
 
+        /// <summary>
+        /// Set display to a single view
+        /// </summary>
         private void toolStripMenuItem_single_Click(object sender, EventArgs e)
         {
-            this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.NORMAL;
+            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.NORMAL;
             foreach (DataSource s in display.DataSources)
             {
                 s.AutoScaleY = true;
             }
-            this.button_autoScaleY.Enabled = true;
+            checkBox1.Checked = true;
         }
 
+        /// <summary>
+        /// Set display to dual view
+        /// </summary>
         private void toolStripMenuItem_dual_Click(object sender, EventArgs e)
         {
-            this.display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
-        }
-
-        private void button_autoScaleY_Click(object sender, EventArgs e)
-        {
+            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
             foreach (DataSource s in display.DataSources)
             {
-                if (s.AutoScaleY)
-                    s.AutoScaleY = false;
-                else
-                    s.AutoScaleY = true;
+                s.AutoScaleY = false;
             }
+            checkBox1.Checked = false;
+        }
+        
+        /// <summary>
+        /// Toggle Auto scale mode
+        /// </summary>
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            switch (checkBox1.CheckState)
+            {
+                case CheckState.Unchecked:
+                    foreach (DataSource s in display.DataSources)
+                    {
+                        if (s.AutoScaleY)
+                        {
+                            s.AutoScaleY = false;
+                        }
+                    }
+                    break;
+                case CheckState.Checked:
+                    foreach (DataSource s in display.DataSources)
+                    {
+                        if (!s.AutoScaleY)
+                        {
+                            s.AutoScaleY = true;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Event function that sets values to draw as labels of the X axis
+        /// </summary>
+        /// <param name="s">Data source to get values from.</param>
+        /// <param name="idx">Index number of current value</param>
+        /// <returns></returns>
+        private String RenderXLabel(DataSource s, int idx)
+        {
+            if (s.AutoScaleX)
+            {
+                var Value = (s.Samples[idx].x);
+                return string.Empty + Value;
+            }
+            else
+            {
+                var Value = (s.Samples[idx].x) / 1000;
+                var Label = string.Empty + Value + "\"";
+                return Label;
+            }
+        }
+
+        /// <summary>
+        /// Event function that sets values to draw as labels of the Y axis
+        /// </summary>
+        /// <param name="s">Data source to get values from.</param>
+        /// <param name="idx">Index number of current value</param>
+        /// <returns></returns>
+        private String RenderYLabel(DataSource s, float value)
+        {
+            return String.Format("{0:0}mV", value);
+        }
+        #endregion
+
+        #region PRIVATE FUNCTIONS
+        /// <summary>
+        /// Setup PlotterGraph and extract data from the XML file
+        /// </summary>
+        private void processData()
+        {
+            SuspendLayout();
+            display.DataSources.Clear();
+            setDisplayToDefault();
+
+            //load the dataPoints to display.DataSources
+            calcData(PointDataType.RawData); 
+            calcData(PointDataType.FilteredData);
+
+            ResumeLayout();
+            
+            //Show Extremes
+            textBox_highestRawData.Text = display.DataSources[0].HighestValue.ToString();
+            textBox_lowestRawData.Text = display.DataSources[0].LowestValue.ToString();
+            textBox_highestFilteredData.Text = display.DataSources[1].HighestValue.ToString();
+            textBox_lowestFilteredData.Text = display.DataSources[1].LowestValue.ToString();
+            display.Refresh();
+        }
+
+        /// <summary>
+        /// Set colour to data plot
+        /// </summary>
+        /// <param name="i">Plot`s index number</param>
+        /// <returns>Colour for plot</returns>
+        private Color generateColour(int i)
+        {
+            var colours = new Color[] { Color.DimGray,
+                Color.Black };
+            return colours[i];
+        }
+
+        /// <summary>
+        /// Loads and calculates plots` data points from XML nodes
+        /// </summary>
+        /// <param name="type">decides what type of data is beeing loaded in</param>
+        private void calcData(PointDataType type)
+        {
+            float x, y;
+            display.DataSources.Add(new DataSource());
+            ds = display.DataSources[(int)type];
+            setAllGraphsToDeafault(ds, type);
+            var fData = doc.GetElementsByTagName(type.ToString());
+            var i = 0;
+            foreach (XmlNode node_dataType in fData)
+            {
+                ds.Samples = new List<cPoint>();
+                foreach (XmlNode node_dataPoint in node_dataType.ChildNodes)
+                {
+                    x = float.Parse(node_dataPoint.Attributes[0].Value);
+                    y = (float)decimal.Parse(node_dataPoint.Attributes[1].Value, System.Globalization.NumberStyles.Float);
+                    ds.Samples.Add(new cPoint(x * 1000, y * 1000));
+                    ds.findExtremes(y);
+                    i++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets/Resets properties of data sources to their defaults
+        /// </summary>
+        /// <param name="ds">Data source to reset</param>
+        /// <param name="type">Type of data to reset</param>
+        private void setAllGraphsToDeafault(DataSource ds, PointDataType type)
+        {
+            ds.Name = type.ToString();
+            ds.GraphColor = generateColour((int)type);
+            ds.OnRenderXAxisLabel += RenderXLabel;
+            ds.AutoScaleY = false;
+            ds.SetDisplayRangeY((float)-3.5, (float)3.5);
+            ds.SetGridOriginY(0);
+            ds.SetGridDistanceY(1);
+            ds.OnRenderYAxisLabel += RenderYLabel;
+        }
+
+        /// <summary>
+        /// Sets/Resets graph plotter to its defaults
+        /// </summary>
+        private void setDisplayToDefault()
+        {
+            display.SetDisplayRangeX(0, 800);
+            display.SetGridDistanceX(100);
+            display.SetGridOriginX(0);
+            display.Smoothing = System.Drawing.Drawing2D.SmoothingMode.None;
+            display.PanelLayout = PlotterGraphPaneEx.LayoutMode.STACKED;
+
+            display.BackgroundColorBot = Color.White;
+            display.BackgroundColorTop = Color.PapayaWhip;
+            display.SolidGridColor = Color.Red;
+            display.DashedGridColor = Color.Red;
+            display.ShowMovingGrid = false;
+        }
+        #endregion
+
+        /// <summary>
+        /// Enumeration of types of data points
+        /// </summary>
+        private enum PointDataType
+        {
+            RawData = 0,
+            FilteredData = 1
         }
     }
 }
