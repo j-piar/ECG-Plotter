@@ -233,7 +233,7 @@ namespace ECG_Plotter
         /// <summary>
         /// Set colour to data plot
         /// </summary>
-        /// <param name="i">Plot`s index number</param>
+        /// <param name="i">Plot index number</param>
         /// <returns>Colour for plot</returns>
         private Color generateColour(int i)
         {
@@ -243,9 +243,9 @@ namespace ECG_Plotter
         }
 
         /// <summary>
-        /// Loads and calculates plots` data points from XML nodes
+        /// Loads and calculates plot data points from XML nodes
         /// </summary>
-        /// <param name="type">decides what type of data is beeing loaded in</param>
+        /// <param name="type">decides what type of data is being loaded in</param>
         private void calcData(PointDataType type)
         {
             float x, y;
