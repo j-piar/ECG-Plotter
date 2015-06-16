@@ -78,7 +78,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalcDataGraphs.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,7 +99,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="ECG Plotter_TemporaryKey.pfx" />
-    <None Include="ecg_plotter.log" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

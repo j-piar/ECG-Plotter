@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Form1.cs
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GraphLib;
 using System.Drawing;
+
 
 namespace ECG_Plotter
 {
